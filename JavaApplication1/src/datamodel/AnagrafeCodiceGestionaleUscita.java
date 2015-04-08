@@ -9,7 +9,7 @@ package datamodel;
  *
  * @author f4e
  */
-public class AnagrafeCodiceGestionaleUscite {
+public class AnagrafeCodiceGestionaleUscita {
     
     private String COD_GEST;
     private String COD_CATEG;

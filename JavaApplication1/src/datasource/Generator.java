@@ -114,7 +114,10 @@ public class Generator {
             stmt = conn.createStatement();
 
             String sql = GetCreateTableSQL(type);
-
+            
+            //if(type == TableType.ANAGRAFE_COMUNI)
+              //  stmt.executeUpdate("DROP TABLE ANAGRAFE_COMUNI");
+            
             stmt.executeUpdate(sql);
         }
         catch(SQLException se){
@@ -198,21 +201,21 @@ public class Generator {
         else if(type == TableType.ANAG_CODGEST_USCITE)
             return "CREATE TABLE IF NOT EXISTS ANAG_CODGEST_USCITE " +
                         "(COD_GEST VARCHAR(255) not NULL, " +
-                        " COD_CATEG VARCHAR(255), " + 
+                        " COD_CATEG VARCHAR(255) not NULL, " + 
                         " DESCRIZIONE_CGU VARCHAR(255), " + 
                         " DATA_INIZIO_VALIDITA VARCHAR(255), " +
                         " DATA_FINE_VALIDITA VARCHAR(255), " +
-                        " PRIMARY KEY ( COD_GEST ))";
+                        " PRIMARY KEY ( COD_GEST, COD_CATEG ))";
         else if(type == TableType.ANAG_REG_PROV)
             return "CREATE TABLE IF NOT EXISTS ANAG_REG_PROV " +
                         "(RIPART_GEO VARCHAR(255) not NULL, " +
-                        " COD_REGIONE VARCHAR(255), " + 
+                        " COD_REGIONE VARCHAR(255) not NULL, " + 
                         " DESCRIZIONE_REGIONE VARCHAR(255), " + 
-                        " COD_PROVINCIA VARCHAR(255), " +
+                        " COD_PROVINCIA VARCHAR(255) not NULL, " +
                         " DESCRIZIONE_PROVINCIA VARCHAR(255), " +
-                        " PRIMARY KEY ( RIPART_GEO ))";
+                        " PRIMARY KEY ( COD_REGIONE, COD_PROVINCIA ))";
         else if(type == TableType.ANAG_ENTI_SIOPE)
-            return "CREATE TABLE IF NOT EXISTS ANAG_REG_PROV " +
+            return "CREATE TABLE IF NOT EXISTS ANAG_ENTI_SIOPE " +
                         "(COD_ENTE VARCHAR(255) not NULL, " +
                         " DATA_INC_SIOPE VARCHAR(255), " + 
                         " DATA_ESC_SIOPE VARCHAR(255), " + 
@@ -227,8 +230,8 @@ public class Generator {
             return "CREATE TABLE IF NOT EXISTS ANAGRAFE_COMUNI " +
                         "(COD_COMUNE VARCHAR(255) not NULL, " +
                         " DESCR_COMUNE VARCHAR(255), " + 
-                        " COD_PROVINCIA VARCHAR(255), " + 
-                        " PRIMARY KEY ( COD_COMUNE ))";
+                        " COD_PROVINCIA VARCHAR(255) not NULL, " + 
+                        " PRIMARY KEY ( COD_COMUNE, COD_PROVINCIA ))";
         else if(type == TableType.ENTI_USCITE_MENSILI)
             return "CREATE TABLE IF NOT EXISTS ENTI_USCITE_MENSILI " +
                         "(COD_ENTE VARCHAR(255) not NULL, " +

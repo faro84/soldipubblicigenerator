@@ -9,7 +9,7 @@ package datamodel;
  *
  * @author f4e
  */
-public class AnagrafeEntiSiope {
+public class AnagrafeEnteSiope {
     
     private String COD_ENTE;
     private String DATA_INC_SIOPE;
