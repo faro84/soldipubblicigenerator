@@ -18,11 +18,16 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Connection conn = Generator.Connect("root", "faro84bli");
-        if(conn != null)
-            Generator.CreateDB(conn, "soldipubblici");
-        else
-            System.out.println("Error");
+        
+        Generator.CreateDB("root", "faro84bli", "soldipubblici");
+        
+        Generator.CreateTable_ANAGRAFE_COMUNI("root", "faro84bli");
+        Generator.CreateTable_ANAG_CODGEST_USCITE("root", "faro84bli");
+        Generator.CreateTable_ANAG_COMPARTI("root", "faro84bli");
+        Generator.CreateTable_ANAG_ENTI_SIOPE("root", "faro84bli");
+        Generator.CreateTable_ANAG_REG_PROV("root", "faro84bli");
+        Generator.CreateTable_ANAG_SOTTOCOMPARTI("root", "faro84bli");
+        Generator.CreateTable_ENTI_USCITE_MENSILI("root", "faro84bli");
     }
     
 }
