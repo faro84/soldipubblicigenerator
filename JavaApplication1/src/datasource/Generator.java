@@ -19,6 +19,9 @@ import java.util.logging.Logger;
  */
 public class Generator {
     
+    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
+    static final String DB_URL = "jdbc:mysql://localhost/";
+    
     public static Connection Connect(String username, String password)
     {
         Connection conn = null;
@@ -27,7 +30,7 @@ public class Generator {
             // This will load the MySQL driver, each DB has its own driver
             Class.forName("com.mysql.jdbc.Driver");
             // Setup the connection with the DB
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/feedback?user="+username+"&password="+password+"\"");
+            conn = DriverManager.getConnection(DB_URL, username, password);
         } catch (Exception ex) {
             Logger.getLogger(Generator.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -55,7 +58,7 @@ public class Generator {
                 }
             }
             
-            String sql = "CREATE DATABASE" + databaseName;
+            String sql = "CREATE DATABASE " + databaseName;
             stmt.executeUpdate(sql);
             System.out.println("Database created successfully...");
         }
@@ -69,7 +72,6 @@ public class Generator {
         }
         finally
         {
-            //finally block used to close resources
             try
             {
                 if(stmt!=null)
@@ -77,7 +79,7 @@ public class Generator {
             }
             catch(SQLException se2)
             {
-            }// nothing we can do
+            }
             try
             {
                 if(conn!=null)
@@ -86,8 +88,7 @@ public class Generator {
             catch(SQLException se)
             {
                 se.printStackTrace();
-            }//end finally try
-        }//end try
-        System.out.println("Goodbye!");   
+            }
+        }
     }
 }
