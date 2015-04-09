@@ -342,6 +342,9 @@ public class CSVReader
                 entiUsciteMensile.setCODICE_GESTIONALE(lineCSV[3]);
                 entiUsciteMensile.setIMP_USCITE_ATT(lineCSV[4]);
                 entiUsciteMensili.add(entiUsciteMensile);
+                
+                if(entiUsciteMensili.size() == 50000)
+                    break;
             }
 	} 
         catch (FileNotFoundException e)

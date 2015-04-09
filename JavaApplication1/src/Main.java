@@ -33,7 +33,7 @@ public class Main {
      */
     public static void main(String[] args) {
         
-        boolean read = false;
+        boolean read = true;
         
         if(!read)
         {
@@ -53,7 +53,7 @@ public class Main {
             //ArrayList<AnagrafeRegioniProvince> anagrafeRegioniProvince = CSVReader.ReadCSV_ANAG_REG_PROV("data\\ANAG_REG_PROV.csv");
             //ArrayList<AnagrafeEnteSiope> anagrafeEnteSiope = CSVReader.ReadCSV_ANAG_ENTI_SIOPE("data\\ANAG_ENTI_SIOPE.csv");
             //ArrayList<AnagrafeComune> anagrafeComuni = CSVReader.ReadCSV_ANAGRAFE_COMUNI("data\\ANAGRAFE_COMUNI.csv");
-            ArrayList<EntiUsciteMensili> entiUsciteMensili = CSVReader.ReadCSV_ENTI_USCITE_MENSILI("data\\ENTI_USCITE_MENSILI.csv");
+            //ArrayList<EntiUsciteMensili> entiUsciteMensili = CSVReader.ReadCSV_ENTI_USCITE_MENSILI("c:\\ENTI_USCITE_MENSILI.csv");
             try {
                 System.in.read();
             } catch (IOException ex) {
@@ -65,7 +65,7 @@ public class Main {
             //Insert.InsertInto_ANAG_REG_PROV("root", "faro84bli", anagrafeRegioniProvince);
             //Insert.InsertInto_ANAG_ENTI_SIOPE("root", "faro84bli", anagrafeEnteSiope);
             //Insert.InsertInto_ANAGRAFE_COMUNI("root", "faro84bli", anagrafeComuni);
-            Insert.InsertInto_ENTI_USCITE_MENSILI("root", "faro84bli", entiUsciteMensili);
+            //Insert.InsertInto_ENTI_USCITE_MENSILI("root", "faro84bli", entiUsciteMensili);
         }
         else
         {
