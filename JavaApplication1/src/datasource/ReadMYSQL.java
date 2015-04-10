@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  *
@@ -244,8 +245,22 @@ public class ReadMYSQL {
         return new ArrayList<RipartizioneGeograficaInfo>(ripMap.values());
     }
     
-    public static void Read_ANAG_ENTI_SIOPE(String userName, String password)
+    public static HashSet<Ente> ReadAndGenerate_ANAG_ENTI_SIOPE(String userName, String password, ArrayList<RipartizioneGeograficaInfo> rip)
     {
+        HashMap<String, Comune> com = new HashMap<String, Comune>();
+        HashSet<Ente> enti = new HashSet<Ente>();
+        for(RipartizioneGeograficaInfo rgi : rip)
+        {
+            for(Regione reg : rgi.getRegioni())
+            {
+                for(Provincia pro : reg.getProvince())
+                {
+                    for(Comune comune : pro.getComuni())
+                        com.put(comune.getCodice(), comune);
+                }
+            }
+        }
+        
         try
         {
             // create our mysql database connection
@@ -272,6 +287,12 @@ public class ReadMYSQL {
                 String lastName3 = rs.getString("COD_FISCALE");
                 String lastName4 = rs.getString("DESCR_ENTE");
                 String lastName5 = rs.getString("COD_COMUNE");
+                Comune comune = com.get(rs.getString("COD_COMUNE"));
+                comune.addEnte(rs.getString("COD_ENTE"));
+                Ente ente = new Ente();
+                ente.setCodice(rs.getString("COD_ENTE"));
+                ente.setComune(comune);
+                enti.add(ente);
                 String lastName6 = rs.getString("COD_PROVINCIA");
                 String lastName7 = rs.getString("NUM_ABITANTI");
                 String lastName8 = rs.getString("SOTTOCOMPARTO_SIOPE");
@@ -285,6 +306,7 @@ public class ReadMYSQL {
             System.err.println("Got an exception! ");
             System.err.println(e.getMessage());
         }
+        return enti;
     }
     
     public static void Read_ANAGRAFE_COMUNI(String userName, String password)
@@ -403,6 +425,60 @@ public class ReadMYSQL {
             {
                 count++;
                 String firstName = rs.getString("COD_ENTE");
+                String lastName = rs.getString("ANNO");
+                String lastName2 = rs.getString("PERIODO");
+                String lastName3 = rs.getString("CODICE_GESTIONALE");
+                String lastName4 = rs.getString("IMP_USCITE_ATT");
+                System.out.println(firstName + "," + lastName + "," + lastName2);
+            }
+            st.close();
+            System.out.println(count);
+        }
+        catch (Exception e)
+        {
+            System.err.println("Got an exception in reading! ");
+            System.err.println(e.getMessage());
+        }
+    }
+    
+    public static void ReadGenerate_ENTI_USCITE_MENSILI(String userName, String password, ArrayList<RipartizioneGeograficaInfo> rip, HashMap<String, Ente> enti)
+    {
+        HashMap<String, Comune> com = new HashMap<String, Comune>();
+        
+        for(RipartizioneGeograficaInfo rgi : rip)
+        {
+            for(Regione reg : rgi.getRegioni())
+            {
+                for(Provincia pro : reg.getProvince())
+                {
+                    for(Comune comune : pro.getComuni())
+                        com.put(comune.getCodice(), comune);
+                }
+            }
+        }
+        
+        try
+        {
+            // create our mysql database connection
+            Class.forName(JDBC_DRIVER);
+            Connection conn = DriverManager.getConnection(DB_URL, userName, password);
+
+            // our SQL SELECT query. 
+            // if you only need a few columns, specify them by name instead of using "*"
+            String query = "SELECT * FROM ENTI_USCITE_MENSILI";
+
+            // create the java statement
+            Statement st = conn.createStatement();
+
+            // execute the query, and get a java resultset
+            ResultSet rs = st.executeQuery(query);
+            int count = 0;
+            // iterate through the java resultset
+            while (rs.next())
+            {
+                count++;
+                String firstName = rs.getString("COD_ENTE");
+                Ente ente = enti.get(rs.getString("COD_ENTE"));
                 String lastName = rs.getString("ANNO");
                 String lastName2 = rs.getString("PERIODO");
                 String lastName3 = rs.getString("CODICE_GESTIONALE");

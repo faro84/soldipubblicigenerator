@@ -5,6 +5,8 @@
  */
 package datamodel;
 
+import java.util.HashSet;
+
 /**
  *
  * @author f4e
@@ -15,9 +17,11 @@ public class Comune {
     private String descrizione;
     private Provincia provincia;
     private double totalePagamenti;
+    private HashSet<String> enti;
 
     public Comune(){
         totalePagamenti = 0;
+        enti= new HashSet<String>();
     }
     
     /**
@@ -74,6 +78,24 @@ public class Comune {
      */
     public void setProvincia(Provincia provincia) {
         this.provincia = provincia;
+    }
+
+    /**
+     * @return the enti
+     */
+    public HashSet<String> getEnti() {
+        return enti;
+    }
+
+    /**
+     * @param enti the enti to set
+     */
+    public void setEnti(HashSet<String> enti) {
+        this.enti = enti;
+    }
+    
+    public void addEnte(String ente) {
+        this.enti.add(ente);
     }
     
 }
