@@ -203,6 +203,7 @@ public class ReadMYSQL {
                 {
                     rip = new RipartizioneGeograficaInfo();
                     rip.setName(rs.getString("RIPART_GEO"));
+                    ripMap.put(rip.getName(), rip);
                 }
                 
                 Regione reg = null;
@@ -216,6 +217,7 @@ public class ReadMYSQL {
                     reg.setCodice(rs.getString("COD_REGIONE"));
                     reg.setDescrizione(rs.getString("DESCRIZIONE_REGIONE"));
                     reg.setRipartizione(rip);
+                    regMap.put(reg.getCodice(), reg);
                     rip.addRegione(reg);
                 }
 
@@ -245,10 +247,10 @@ public class ReadMYSQL {
         return new ArrayList<RipartizioneGeograficaInfo>(ripMap.values());
     }
     
-    public static HashSet<Ente> ReadAndGenerate_ANAG_ENTI_SIOPE(String userName, String password, ArrayList<RipartizioneGeograficaInfo> rip)
+    public static HashMap<String, Ente> ReadAndGenerate_ANAG_ENTI_SIOPE(String userName, String password, ArrayList<RipartizioneGeograficaInfo> rip)
     {
         HashMap<String, Comune> com = new HashMap<String, Comune>();
-        HashSet<Ente> enti = new HashSet<Ente>();
+        HashMap<String, Ente> enti = new HashMap<String, Ente>();
         for(RipartizioneGeograficaInfo rgi : rip)
         {
             for(Regione reg : rgi.getRegioni())
@@ -288,11 +290,15 @@ public class ReadMYSQL {
                 String lastName4 = rs.getString("DESCR_ENTE");
                 String lastName5 = rs.getString("COD_COMUNE");
                 Comune comune = com.get(rs.getString("COD_COMUNE"));
-                comune.addEnte(rs.getString("COD_ENTE"));
-                Ente ente = new Ente();
-                ente.setCodice(rs.getString("COD_ENTE"));
-                ente.setComune(comune);
-                enti.add(ente);
+                String name = rs.getString("COD_COMUNE");
+                if(comune != null) {
+                    comune.addEnte(rs.getString("COD_ENTE"));
+                    Ente ente = new Ente();
+                    ente.setCodice(rs.getString("COD_ENTE"));
+                    ente.setComune(comune);
+                    enti.put(ente.getCodice(), ente);
+                }
+                
                 String lastName6 = rs.getString("COD_PROVINCIA");
                 String lastName7 = rs.getString("NUM_ABITANTI");
                 String lastName8 = rs.getString("SOTTOCOMPARTO_SIOPE");
@@ -456,7 +462,7 @@ public class ReadMYSQL {
                 }
             }
         }
-        
+        int count = 0;
         try
         {
             // create our mysql database connection
@@ -472,18 +478,32 @@ public class ReadMYSQL {
 
             // execute the query, and get a java resultset
             ResultSet rs = st.executeQuery(query);
-            int count = 0;
+            
             // iterate through the java resultset
             while (rs.next())
             {
                 count++;
+                if(count == 14)
+                    System.out.println("");
                 String firstName = rs.getString("COD_ENTE");
+                if(firstName.isEmpty() || firstName == null)
+                    System.out.println("firstName empty");
                 Ente ente = enti.get(rs.getString("COD_ENTE"));
+                if(ente == null)
+                    System.out.println("comune null");
+                String lastName4 = rs.getString("IMP_USCITE_ATT");
+                
+                if(lastName4.isEmpty() || lastName4 == null)
+                    System.out.println("last empty");
+                double spesa = replaceZeros(lastName4.replace("\"", ""));
+                ente.setTotaleSpese(ente.getTotaleSpese() + spesa);
+                Comune c = ente.getComune();
+                if(c == null)
+                    System.out.println("comune null");
+                c.setTotalePagamenti(c.getTotalePagamenti() + spesa);
                 String lastName = rs.getString("ANNO");
                 String lastName2 = rs.getString("PERIODO");
                 String lastName3 = rs.getString("CODICE_GESTIONALE");
-                String lastName4 = rs.getString("IMP_USCITE_ATT");
-                System.out.println(firstName + "," + lastName + "," + lastName2);
             }
             st.close();
             System.out.println(count);
@@ -493,5 +513,13 @@ public class ReadMYSQL {
             System.err.println("Got an exception in reading! ");
             System.err.println(e.getMessage());
         }
+    }
+
+    private static double replaceZeros(String str) {
+        if(str == "" || str.isEmpty())
+            return 0;
+        if (str.matches("\\d+"))
+            return Double.parseDouble(str.replaceAll("^0+", ""));
+        return Double.parseDouble(str);
     }
 }

@@ -12,6 +12,7 @@ package datamodel;
 public class Ente {
     
     private String codice;
+    private double totaleSpese;
     private Comune comune;
 
     /**
@@ -40,6 +41,20 @@ public class Ente {
      */
     public void setComune(Comune comune) {
         this.comune = comune;
+    }
+
+    /**
+     * @return the totaleSpese
+     */
+    public double getTotaleSpese() {
+        return totaleSpese;
+    }
+
+    /**
+     * @param totaleSpese the totaleSpese to set
+     */
+    public void setTotaleSpese(double totaleSpese) {
+        this.totaleSpese = totaleSpese;
     }
     
 }

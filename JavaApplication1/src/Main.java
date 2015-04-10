@@ -5,7 +5,9 @@ import datamodel.AnagrafeComune;
 import datamodel.AnagrafeEnteSiope;
 import datamodel.AnagrafeRegioniProvince;
 import datamodel.AnagrafeSottocomparto;
+import datamodel.Ente;
 import datamodel.EntiUsciteMensili;
+import datamodel.RipartizioneGeograficaInfo;
 import datasource.CSVReader;
 import datasource.Generator;
 import datasource.Insert;
@@ -13,6 +15,8 @@ import datasource.ReadMYSQL;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -75,7 +79,12 @@ public class Main {
             //ReadMYSQL.Read_ANAG_REG_PROV("root", "faro84bli");
             //ReadMYSQL.Read_ANAG_ENTI_SIOPE("root", "faro84bli");
             //ReadMYSQL.Read_ANAGRAFE_COMUNI("root", "faro84bli");
-            ReadMYSQL.Read_ENTI_USCITE_MENSILI("root", "faro84bli");
+            //ReadMYSQL.Read_ENTI_USCITE_MENSILI("root", "faro84bli");
+            ArrayList<RipartizioneGeograficaInfo> rip = ReadMYSQL.ReadAndGenerate_ANAG_REG_PROV("root", "faro84bli");
+            ReadMYSQL.ReadAndGenerate_ANAGRAFE_COMUNI("root", "faro84bli", rip);
+            HashMap<String, Ente> entiSet = ReadMYSQL.ReadAndGenerate_ANAG_ENTI_SIOPE("root", "faro84bli", rip);
+            ReadMYSQL.ReadGenerate_ENTI_USCITE_MENSILI("root", "faro84bli", rip, entiSet);
+            
         }
     }
     
