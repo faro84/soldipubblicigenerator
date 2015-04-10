@@ -51,5 +51,24 @@ public class RipartizioneGeograficaInfo {
     public void addRegione(Regione regione) {
         this.regioni.add(regione);
     }
+
+    public String toJSON() {
+        String Json = null;
+        Json = "{" + System.getProperty("line.separator") + "\"name\": "+this.getName()+"," + System.getProperty("line.separator") + "";
+        Json = Json + "\"children\": [" + System.getProperty("line.separator") + "";
+        
+        int i = 1;
+        for(Regione regione : this.regioni)
+        {
+            if(i != this.regioni.size())
+                Json = Json + regione.toJSON() + "," + System.getProperty("line.separator") + "";
+            else
+                Json = Json + regione.toJSON() + System.getProperty("line.separator") + "";
+            i++;
+        }
+        Json = Json + "]" + System.getProperty("line.separator") + "";
+        Json = Json + "}";
+        return Json;
+    }
     
 }

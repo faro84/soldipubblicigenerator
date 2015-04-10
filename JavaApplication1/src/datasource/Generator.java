@@ -5,12 +5,14 @@
  */
 package datasource;
 
+import datamodel.RipartizioneGeograficaInfo;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -241,5 +243,25 @@ public class Generator {
                         " IMP_USCITE_ATT VARCHAR(255))";
                    
         return null;
+    }
+
+    public static String GenerateJSON(ArrayList<RipartizioneGeograficaInfo> rip) {
+        
+        String Json = null;
+        Json = "{" + System.getProperty("line.separator") + "\"name\": \"italia\"," + System.getProperty("line.separator") + "";
+        Json = Json + "\"children\": [" + System.getProperty("line.separator") + "";
+        int i = 1;
+        for(RipartizioneGeograficaInfo r : rip)
+        {
+            if(i != rip.size())
+                Json = Json + r.toJSON() + "," + System.getProperty("line.separator") + "";
+            else
+                Json = Json + r.toJSON() + System.getProperty("line.separator") + "";
+            i++;
+        }
+        Json = Json + "]" + System.getProperty("line.separator") + "";
+        Json = Json + "}";
+        return Json;
+        
     }
 }

@@ -12,6 +12,9 @@ import datasource.CSVReader;
 import datasource.Generator;
 import datasource.Insert;
 import datasource.ReadMYSQL;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -84,6 +87,22 @@ public class Main {
             ReadMYSQL.ReadAndGenerate_ANAGRAFE_COMUNI("root", "faro84bli", rip);
             HashMap<String, Ente> entiSet = ReadMYSQL.ReadAndGenerate_ANAG_ENTI_SIOPE("root", "faro84bli", rip);
             ReadMYSQL.ReadGenerate_ENTI_USCITE_MENSILI("root", "faro84bli", rip, entiSet);
+            String JSON = Generator.GenerateJSON(rip);
+            
+            try
+            {
+                File logFile = new File("jsontest.json");
+
+                BufferedWriter writer = new BufferedWriter(new FileWriter(logFile));
+                writer.write(JSON);
+
+                //Close writer
+                writer.close();
+                
+            } catch(Exception e)
+            {
+                e.printStackTrace();
+            }
             
         }
     }

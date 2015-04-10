@@ -81,5 +81,24 @@ public class Provincia {
     public void setRegione(Regione regione) {
         this.regione = regione;
     }
+
+    String toJSON() {
+        String Json = null;
+        Json = "{" + System.getProperty("line.separator") + "\"name\": "+this.getDescrizione()+"," + System.getProperty("line.separator") + "";
+        Json = Json + "\"children\": [" + System.getProperty("line.separator") + "";
+        
+        int i = 1;
+        for(Comune c : this.comuni)
+        {
+            if(i != this.comuni.size())
+                Json = Json + c.toJSON() + "," + System.getProperty("line.separator") + "";
+            else
+                Json = Json + c.toJSON() + System.getProperty("line.separator") + "";
+            i++;
+        }
+        Json = Json + "]" + System.getProperty("line.separator") + "";
+        Json = Json + "}";
+        return Json;
+    }
     
 }

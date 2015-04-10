@@ -97,5 +97,12 @@ public class Comune {
     public void addEnte(String ente) {
         this.enti.add(ente);
     }
+
+    String toJSON() {
+        String Json = null;
+        Json = "{\"name\": "+this.getDescrizione()+",\"size\":" + Math.round(this.getTotalePagamenti()) + "}";
+        
+        return Json;
+    }
     
 }

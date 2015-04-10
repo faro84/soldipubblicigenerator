@@ -81,5 +81,24 @@ public class Regione {
     public void setDescrizione(String descrizione) {
         this.descrizione = descrizione;
     }
+
+    String toJSON() {
+        String Json = null;
+        Json = "{" + System.getProperty("line.separator") + "\"name\": "+this.getDescrizione()+"," + System.getProperty("line.separator") + "";
+        Json = Json + "\"children\": [" + System.getProperty("line.separator") + "";
+        
+        int i = 1;  
+        for(Provincia prov : this.province)
+        {
+            if(i != this.province.size())
+                Json = Json + prov.toJSON() + "," + System.getProperty("line.separator") + "";
+            else
+                Json = Json + prov.toJSON() + System.getProperty("line.separator") + "";
+            i++;
+        }
+        Json = Json + "]" + System.getProperty("line.separator") + "";
+        Json = Json + "}";
+        return Json;
+    }
     
 }

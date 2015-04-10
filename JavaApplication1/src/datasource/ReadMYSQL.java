@@ -498,7 +498,7 @@ public class ReadMYSQL {
                     double spesa = replaceZeros(lastName4.replace("\"", ""));
                     ente.setTotaleSpese(ente.getTotaleSpese() + spesa);
                     Comune c = ente.getComune();
-                    if(c == null)
+                    if(c != null)
                     {
                         System.out.println("comune null");
                         c.setTotalePagamenti(c.getTotalePagamenti() + spesa);
