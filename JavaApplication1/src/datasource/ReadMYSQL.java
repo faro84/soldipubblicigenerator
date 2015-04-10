@@ -483,27 +483,30 @@ public class ReadMYSQL {
             while (rs.next())
             {
                 count++;
-                if(count == 14)
-                    System.out.println("");
+                //if(count == 4714)
+                  //  System.out.println("");
                 String firstName = rs.getString("COD_ENTE");
                 if(firstName.isEmpty() || firstName == null)
                     System.out.println("firstName empty");
                 Ente ente = enti.get(rs.getString("COD_ENTE"));
-                if(ente == null)
-                    System.out.println("comune null");
-                String lastName4 = rs.getString("IMP_USCITE_ATT");
-                
-                if(lastName4.isEmpty() || lastName4 == null)
-                    System.out.println("last empty");
-                double spesa = replaceZeros(lastName4.replace("\"", ""));
-                ente.setTotaleSpese(ente.getTotaleSpese() + spesa);
-                Comune c = ente.getComune();
-                if(c == null)
-                    System.out.println("comune null");
-                c.setTotalePagamenti(c.getTotalePagamenti() + spesa);
-                String lastName = rs.getString("ANNO");
-                String lastName2 = rs.getString("PERIODO");
-                String lastName3 = rs.getString("CODICE_GESTIONALE");
+                if(ente != null) {
+                    
+                    String lastName4 = rs.getString("IMP_USCITE_ATT");
+
+                    if(lastName4.isEmpty() || lastName4 == null)
+                        System.out.println("last empty");
+                    double spesa = replaceZeros(lastName4.replace("\"", ""));
+                    ente.setTotaleSpese(ente.getTotaleSpese() + spesa);
+                    Comune c = ente.getComune();
+                    if(c == null)
+                    {
+                        System.out.println("comune null");
+                        c.setTotalePagamenti(c.getTotalePagamenti() + spesa);
+                        String lastName = rs.getString("ANNO");
+                        String lastName2 = rs.getString("PERIODO");
+                        String lastName3 = rs.getString("CODICE_GESTIONALE");
+                    }
+                }
             }
             st.close();
             System.out.println(count);
@@ -518,8 +521,12 @@ public class ReadMYSQL {
     private static double replaceZeros(String str) {
         if(str == "" || str.isEmpty())
             return 0;
-        if (str.matches("\\d+"))
-            return Double.parseDouble(str.replaceAll("^0+", ""));
+        if (str.matches("\\d+")){
+            String s = str.replaceAll("^0+", "");
+            if(s.equals("") || s.isEmpty())
+                return 0;
+            return Double.parseDouble(s);   
+        }
         return Double.parseDouble(str);
     }
 }
