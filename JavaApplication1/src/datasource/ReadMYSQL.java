@@ -5,10 +5,13 @@
  */
 package datasource;
 
+import datamodel.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -166,6 +169,81 @@ public class ReadMYSQL {
         }
     }
     
+    public static ArrayList<RipartizioneGeograficaInfo> ReadAndGenerate_ANAG_REG_PROV(String userName, String password)
+    {
+        HashMap<String, RipartizioneGeograficaInfo> ripMap = new HashMap<String, RipartizioneGeograficaInfo>();
+        HashMap<String, Regione> regMap = new HashMap<String, Regione>();
+        
+        try
+        {
+            // create our mysql database connection
+            Class.forName(JDBC_DRIVER);
+            Connection conn = DriverManager.getConnection(DB_URL, userName, password);
+
+            // our SQL SELECT query. 
+            // if you only need a few columns, specify them by name instead of using "*"
+            String query = "SELECT * FROM ANAG_REG_PROV";
+
+            // create the java statement
+            Statement st = conn.createStatement();
+
+            // execute the query, and get a java resultset
+            ResultSet rs = st.executeQuery(query);
+            int count = 0;
+            // iterate through the java resultset
+            while (rs.next())
+            {
+                RipartizioneGeograficaInfo rip = null;
+                if(ripMap.containsKey(rs.getString("RIPART_GEO")))
+                {
+                    rip = ripMap.get(rs.getString("RIPART_GEO"));
+                }
+                else
+                {
+                    rip = new RipartizioneGeograficaInfo();
+                    rip.setName(rs.getString("RIPART_GEO"));
+                }
+                
+                Regione reg = null;
+                if(regMap.containsKey(rs.getString("COD_REGIONE")))
+                {
+                    reg = regMap.get(rs.getString("COD_REGIONE"));
+                }
+                else
+                {
+                    reg = new Regione();
+                    reg.setCodice(rs.getString("COD_REGIONE"));
+                    reg.setDescrizione(rs.getString("DESCRIZIONE_REGIONE"));
+                    reg.setRipartizione(rip);
+                    rip.addRegione(reg);
+                }
+
+                String firstName = rs.getString("RIPART_GEO");
+                String lastName = rs.getString("COD_REGIONE");
+                String lastName2 = rs.getString("DESCRIZIONE_REGIONE");
+                String lastName3 = rs.getString("COD_PROVINCIA");
+                String lastName4 = rs.getString("DESCRIZIONE_PROVINCIA");
+                Provincia prov = null;
+                
+                prov = new Provincia();
+                prov.setCodice(rs.getString("COD_PROVINCIA"));
+                prov.setDescrizione(rs.getString("DESCRIZIONE_PROVINCIA"));
+                prov.setRegione(reg);
+                reg.addProvince(prov);
+                System.out.println(firstName + "," + lastName + "," + lastName2);
+            }
+            st.close();
+            System.out.println(count);
+        }
+        catch (Exception e)
+        {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+        
+        return new ArrayList<RipartizioneGeograficaInfo>(ripMap.values());
+    }
+    
     public static void Read_ANAG_ENTI_SIOPE(String userName, String password)
     {
         try
@@ -234,6 +312,62 @@ public class ReadMYSQL {
                 String firstName = rs.getString("COD_COMUNE");
                 String lastName = rs.getString("DESCR_COMUNE");
                 String lastName2 = rs.getString("COD_PROVINCIA");
+                System.out.println(firstName + "," + lastName + "," + lastName2);
+            }
+            st.close();
+            System.out.println(count);
+        }
+        catch (Exception e)
+        {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+    }
+    
+    public static void ReadAndGenerate_ANAGRAFE_COMUNI(String userName, String password, ArrayList<RipartizioneGeograficaInfo> rip)
+    {
+        HashMap<String, Provincia> prov = new HashMap<String, Provincia>();
+        
+        for(RipartizioneGeograficaInfo rgi : rip)
+        {
+            for(Regione reg : rgi.getRegioni())
+            {
+                for(Provincia pro : reg.getProvince())
+                {
+                    prov.put(pro.getCodice(), pro);
+                }
+            }
+        }
+        
+        try
+        {
+            // create our mysql database connection
+            Class.forName(JDBC_DRIVER);
+            Connection conn = DriverManager.getConnection(DB_URL, userName, password);
+
+            // our SQL SELECT query. 
+            // if you only need a few columns, specify them by name instead of using "*"
+            String query = "SELECT * FROM ANAGRAFE_COMUNI";
+
+            // create the java statement
+            Statement st = conn.createStatement();
+
+            // execute the query, and get a java resultset
+            ResultSet rs = st.executeQuery(query);
+            int count = 0;
+            // iterate through the java resultset
+            while (rs.next())
+            {
+                count++;
+                String firstName = rs.getString("COD_COMUNE");
+                String lastName = rs.getString("DESCR_COMUNE");
+                String lastName2 = rs.getString("COD_PROVINCIA");
+                Provincia p = prov.get(rs.getString("COD_PROVINCIA"));
+                Comune c = new Comune();
+                c.setCodice(rs.getString("COD_COMUNE"));
+                c.setDescrizione(rs.getString("DESCR_COMUNE"));
+                c.setProvincia(p);
+                p.addComune(c);
                 System.out.println(firstName + "," + lastName + "," + lastName2);
             }
             st.close();
