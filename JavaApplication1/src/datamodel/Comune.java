@@ -6,6 +6,7 @@
 package datamodel;
 
 import java.util.HashSet;
+import java.util.Random;
 
 /**
  *
@@ -99,9 +100,11 @@ public class Comune {
     }
 
     String toJSON() {
+        Random r = new Random();
+        int randomInt = r.nextInt(100) + 1;
         String Json = null;
-        Json = "{\"name\": "+this.getDescrizione()+",\"size\":" + Math.round(this.getTotalePagamenti()) + "}";
-        
+        //Json = "{\"name\": "+this.getDescrizione()+",\"size\":" + Math.round(this.getTotalePagamenti()) + "}";
+        Json = "{\"name\": "+this.getDescrizione()+",\"size\":" + randomInt + "}";
         return Json;
     }
     

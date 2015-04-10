@@ -6,6 +6,7 @@
 package datamodel;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  *
@@ -81,23 +82,38 @@ public class Provincia {
     public void setRegione(Regione regione) {
         this.regione = regione;
     }
+    
+    public double getSpeseTotali() {
+        double spese = 0;
+        for(Comune c : comuni)
+        {
+            spese = spese + c.getTotalePagamenti();
+        }
+        return spese;
+    }
 
     String toJSON() {
+//        String Json = null;
+//        Json = "{" + System.getProperty("line.separator") + "\"name\": "+this.getDescrizione()+"," + System.getProperty("line.separator") + "";
+//        Json = Json + "\"children\": [" + System.getProperty("line.separator") + "";
+//        
+//        int i = 1;
+//        for(Comune c : this.comuni)
+//        {
+//            if(i != this.comuni.size())
+//                Json = Json + c.toJSON() + "," + System.getProperty("line.separator") + "";
+//            else
+//                Json = Json + c.toJSON() + System.getProperty("line.separator") + "";
+//            i++;
+//        }
+//        Json = Json + "]" + System.getProperty("line.separator") + "";
+//        Json = Json + "}";
+//        return Json;
+        Random r = new Random();
+        int randomInt = r.nextInt(100) + 1;
         String Json = null;
-        Json = "{" + System.getProperty("line.separator") + "\"name\": "+this.getDescrizione()+"," + System.getProperty("line.separator") + "";
-        Json = Json + "\"children\": [" + System.getProperty("line.separator") + "";
-        
-        int i = 1;
-        for(Comune c : this.comuni)
-        {
-            if(i != this.comuni.size())
-                Json = Json + c.toJSON() + "," + System.getProperty("line.separator") + "";
-            else
-                Json = Json + c.toJSON() + System.getProperty("line.separator") + "";
-            i++;
-        }
-        Json = Json + "]" + System.getProperty("line.separator") + "";
-        Json = Json + "}";
+        //Json = "{\"name\": "+this.getDescrizione()+",\"size\":" + Math.round(this.getTotalePagamenti()) + "}";
+        Json = "{\"name\": "+this.getDescrizione()+",\"size\":" + randomInt + "}";
         return Json;
     }
     
